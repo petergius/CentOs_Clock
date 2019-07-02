@@ -2,6 +2,7 @@ import sys
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
+from datetime import datetime
 
 main_window = tk.Tk()
 main_window.title("CentOS Clock")   #タイトルバー
@@ -28,6 +29,15 @@ minutesComboBox.place(x=120, y=10)
 #分のラベル表示
 minutesLabel = tk.Label(text="分")
 minutesLabel.place(x=160, y=10)
+
+#現在時刻の表示
+def show_CurrentTime():
+    nowTime = datetime.now()
+    currentTime = tk.StringVar()
+    currentTime.set("現在時刻："+nowTime.strftime('%Y/%m/%d %H:%M:%S'))
+    currentTimeLabel = tk.Label(main_window, textvariable=currentTime)
+    currentTimeLabel.place(x=200, y=10)
+    main_window.after(100, show_CurrentTime)    #100ms×10ms=1000msなので1秒ごとに更新。10msはmainloop()の直前のやつ
 
 #音源のパス
 musicPathLabel = tk.Label(text="音源のパス：")
@@ -64,4 +74,5 @@ musicNameLabel.place(x=10, y=100)
 switchButton = tk.Button(text="start")
 switchButton.pack(fill = "x", padx=30, pady = 20, side = "bottom")
 
+main_window.after(10, show_CurrentTime())
 main_window.mainloop()
