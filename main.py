@@ -1,9 +1,12 @@
 import sys
+import os
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
 from datetime import datetime
+from tkinter import filedialog as tkfd
 
+musicList = []                      #フォルダ内の曲を入れるためのリスト
 main_window = tk.Tk()
 main_window.title("CentOS Clock")   #タイトルバー
 main_window.geometry("400x180")     #画面サイズ　横×縦
@@ -37,7 +40,7 @@ def show_CurrentTime():
     currentTime.set("現在時刻："+nowTime.strftime('%Y/%m/%d %H:%M:%S'))
     currentTimeLabel = tk.Label(main_window, textvariable=currentTime)
     currentTimeLabel.place(x=200, y=10)
-    main_window.after(100, show_CurrentTime)    #100ms×10ms=1000msなので1秒ごとに更新。10msはmainloop()の直前のやつ
+    main_window.after(1000, show_CurrentTime)    #1000msなので1秒ごとに更新
 
 #音源のパス
 musicPathLabel = tk.Label(text="音源のパス：")
@@ -48,8 +51,21 @@ musicPathTextBox = tk.Entry(width=40)
 musicPathTextBox.insert(tk.END, "ここに入れた文字がテキストボックスに入ります")
 musicPathTextBox.place(x=90, y=40)
 
+def musicPathOpenDialog():
+    global musicList                #グローバル変数変数musicList
+    dirPath = tkfd.askdirectory()
+
+    #ダイアログでファイルを選択して開いた時にテキストボックスの中身を空にする
+    if dirPath:
+        musicPathTextBox.delete(0, tk.END)
+
+    fileList = os.listdir(dirPath)  #ディレクトリ内のファイルの取得
+    musicList = fileList    #コピーしても関数を抜けたあとにコピーを保持できない問題発生中
+    musicPathTextBox.insert(tk.END, dirPath)
+    musicPathTextBox.place(x=90, y=40)
+
 #音源のパスを参照するためのボタン
-musicPathReferenceButton = tk.Button(text="参照", width=5)
+musicPathReferenceButton = tk.Button(text="参照", width=5, command=musicPathOpenDialog)
 musicPathReferenceButton.place(x=345, y=35)
 
 
@@ -74,5 +90,5 @@ musicNameLabel.place(x=10, y=100)
 switchButton = tk.Button(text="start")
 switchButton.pack(fill = "x", padx=30, pady = 20, side = "bottom")
 
-main_window.after(10, show_CurrentTime())
+main_window.after(1, show_CurrentTime())
 main_window.mainloop()
