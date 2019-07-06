@@ -10,6 +10,7 @@ main_window.geometry("400x180")     #画面サイズ　横×縦
 
 timeLabel = tk.Label(text="時間：") #時間設定の部分
 timeLabel.place(x=10, y=10)         #ラベルをmain_window上にx×y上に表示
+musicVolume = tk.IntVar(master=main_window, value=50)   #音量調節用変数
 
 
 #時のコンボボックス
@@ -65,6 +66,25 @@ shuffleCheckBox = tk.Checkbutton()
 shuffleLabel = tk.Label(text="：シャッフル")
 shuffleCheckBox.place(x=100, y=70)
 shuffleLabel.place(x=120, y=70)
+
+#音量バー
+musicVolume.set("Volume："+str(musicVolume.get()))
+musicVolumeLabel = tk.Label(main_window, textvariable=musicVolume)
+musicVolumeLabel.place(x=190, y=70)
+
+#音量用のラベルと音量調整
+def MusicValueChanged(*args):
+    global musicVolume
+    global musicVolumeLabel
+    musicVolume.set("Volume："+str(musicVolume.get()))
+    musicVolumeLabel.place(x=190, y=70)
+
+#音量用の変数と音量バーを紐付けるための処理
+musicVolume.trace("w", MusicValueChanged)
+
+#音量バー
+volumeBar = tk.Scale(main_window, length=120, orient='h', from_=0, to=100, variable=musicVolume, showvalue=False)
+volumeBar.place(x=270, y=70)
 
 #流している曲名を入れるためのラベル
 musicNameLabel = tk.Label(text="曲名：")
